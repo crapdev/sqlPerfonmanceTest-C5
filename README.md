@@ -20,66 +20,64 @@ For steps F2 and F3, I created the various tables, such as riwi_cities, riwi_cli
 
 ## Database structure.
 
-```sql
--- 1. Crear tablas independientes (Dimensiones base)
-CREATE TABLE riwi_cities (
-    id SMALLINT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
-);
+```erDiagram
+    riwi_cities {
+        SMALLINT id PK
+        VARCHAR name
+    }
 
-CREATE TABLE riwi_clients (
-    id INT PRIMARY KEY,
-    name VARCHAR(150) NOT NULL
-);
+    riwi_clients {
+        INT id PK
+        VARCHAR name
+    }
 
-CREATE TABLE riwi_technicians (
-    id SMALLINT PRIMARY KEY,
-    full_name VARCHAR(100) NOT NULL
-);
+    riwi_technicians {
+        SMALLINT id PK
+        VARCHAR full_name
+    }
 
-CREATE TABLE riwi_servicetype (
-    id SMALLINT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
-);
+    riwi_servicetype {
+        SMALLINT id PK
+        VARCHAR name
+    }
 
-CREATE TABLE riwi_branches (
-    id SMALLINT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
-);
+    riwi_branches {
+        SMALLINT id PK
+        VARCHAR name
+    }
 
-CREATE TABLE riwi_equipment_categories (
-    id SMALLINT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
-);
+    riwi_equipment_categories {
+        SMALLINT id PK
+        VARCHAR name
+    }
 
--- 2. Crear tablas con dependencias intermedias
-CREATE TABLE riwi_equipments (
-    id INT PRIMARY KEY,
-    name VARCHAR(200) NOT NULL,
-    id_equipment_category SMALLINT,
-    FOREIGN KEY (id_equipment_category) REFERENCES riwi_equipment_categories(id)
-);
+    riwi_equipments {
+        INT id PK
+        VARCHAR name
+        SMALLINT id_equipment_category FK
+    }
 
--- 3. Crear tabla central (Órdenes)
-CREATE TABLE riwi_orders (
-    workorder VARCHAR(100) PRIMARY KEY,
-    id_client INT,
-    id_equipments INT,
-    id_branch SMALLINT,
-    id_city SMALLINT,
-    id_technician SMALLINT,
-    id_servicetype SMALLINT,
-    servicedate DATE,
-    hours SMALLINT,
-    cost DECIMAL(10,2),
-    
-    FOREIGN KEY (id_client) REFERENCES riwi_clients(id),
-    FOREIGN KEY (id_equipments) REFERENCES riwi_equipments(id),
-    FOREIGN KEY (id_branch) REFERENCES riwi_branches(id),
-    FOREIGN KEY (id_city) REFERENCES riwi_cities(id),
-    FOREIGN KEY (id_technician) REFERENCES riwi_technicians(id),
-    FOREIGN KEY (id_servicetype) REFERENCES riwi_servicetype(id)
-);
+    riwi_orders {
+        VARCHAR workorder PK
+        INT id_client FK
+        INT id_equipments FK
+        SMALLINT id_branch FK
+        SMALLINT id_city FK
+        SMALLINT id_technician FK
+        SMALLINT id_servicetype FK
+        DATE servicedate
+        SMALLINT hours
+        DECIMAL cost
+    }
+
+    riwi_equipment_categories ||--o{ riwi_equipments : "contiene"
+    riwi_clients ||--o{ riwi_orders : "solicita"
+    riwi_equipments ||--o{ riwi_orders : "recibe_servicio"
+    riwi_branches ||--o{ riwi_orders : "gestiona"
+    riwi_cities ||--o{ riwi_orders : "ubica"
+    riwi_technicians ||--o{ riwi_orders : "asigna"
+    riwi_servicetype ||--o{ riwi_orders : "clasifica"
+
 ```
 
 
