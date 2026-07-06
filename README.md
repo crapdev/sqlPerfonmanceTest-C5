@@ -20,7 +20,8 @@ For steps F2 and F3, I created the various tables, such as riwi_cities, riwi_cli
 
 ## Database structure.
 
-```erDiagram
+```mermaid
+erDiagram
     riwi_cities {
         SMALLINT id PK
         VARCHAR name
