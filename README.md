@@ -82,13 +82,6 @@ CREATE TABLE riwi_orders (
 );
 ```
 
-***
-    
-    • Database creation instructions.
-    
-    • Data loading instructions.
-    
-    • Explanation of each SQL query.
 
 
 ## 👨‍💻 Author
